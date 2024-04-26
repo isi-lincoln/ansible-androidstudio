@@ -17,12 +17,16 @@
       ((ansible_local.cmdlinetools is defined) and \
       (ansible_local['cmdlinetools']['settings']['version'] != cmdline_tools_file_name | regex_replace('commandlinetools-linux-(\\d*).*', '\\1'))) }}"
 
-- get_url:
-    checksum: 'sha256:{{ cmdline_tools_checksum }}'
+- name: get checksum
+  shell: 'curl https://developer.android.com/studio | grep -A10 sdk_linux_download | grep -A4 "zip" | grep td | tail -n1 | grep -Po "[\d].*[\d]"'
+  register: cmdline_sha
+
+- name: Ensure commandline-tools archive is downloaded
+  get_url:
+    checksum: "sha256:{{cmdline_sha.stdout}}"
     dest: '/tmp/{{ cmdline_tools_file_name }}'
     url: 'https://dl.google.com/android/repository/{{ cmdline_tools_file_name }}'
   when: install_cmdlinetools
-  name: Ensure commandline-tools archive is downloaded
 
 - name: Run generic Linux tasks
   include_tasks: user-Linux.yml

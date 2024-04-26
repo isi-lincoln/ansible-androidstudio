@@ -39,8 +39,8 @@ galaxy_info:
     - washingtondc
     - windows
 dependencies:
-  - role: professormanhattan.snapd
+  - role: ansible-snapd
     when: ansible_system == 'Linux'
-  - role: professormanhattan.homebrew
+  - role: ansible-homebrew
     when: ansible_os_family == "Darwin"
-  - role: professormanhattan.java
+  - role: ansible-java
